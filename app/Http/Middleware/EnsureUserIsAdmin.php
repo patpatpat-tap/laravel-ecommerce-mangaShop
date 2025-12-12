@@ -12,17 +12,24 @@ class EnsureUserIsAdmin
     {
         $user = Auth::user();
 
-        if (! $user) {
-            return redirect()->route('login');
+        if (!$user) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+            // Store intended URL and redirect to login
+            return redirect()->route('login')->with('error', 'Please login to access the admin dashboard.');
         }
 
-        if (! ($user->is_admin ?? false)) {
+        // Check the Model's 'is_admin' column
+        $isAdmin = $user->is_admin ?? false;
+
+        if (!$isAdmin) {
             if ($request->expectsJson()) {
-                return response()->json(['message' => 'Forbidden'], 403);
+                return response()->json(['message' => 'Forbidden'], 403); // STOP! Show 403 error.
             }
             abort(403, 'Access denied.');
         }
 
-        return $next($request);
+        return $next($request); //GO! Pass to the controller.
     }
 }

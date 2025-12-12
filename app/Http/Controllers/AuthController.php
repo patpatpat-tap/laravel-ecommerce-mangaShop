@@ -25,6 +25,12 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            
+            // Redirect admin users to admin dashboard
+            if (Auth::user()->is_admin) {
+                return redirect()->intended('/admin/dashboard');
+            }
+            
             return redirect()->intended('/dashboard');
         }
 
@@ -33,10 +39,10 @@ class AuthController extends Controller
         ]);
     }
 
-    // 🔹 Show Register Page
+    // 🔹 Show Register Page (redirects to login page with register tab)
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return redirect()->route('login')->with('show_register', true);
     }
 
     // 🔹 Handle Registration
@@ -45,18 +51,24 @@ class AuthController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6|confirmed'
+            'password' => 'required|min:6|confirmed',
+            'is_admin' => 'nullable|boolean'
         ]);
 
-        $user = User::create([
+        $isAdmin = $request->has('is_admin') && $request->is_admin == '1';
+
+        User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'is_admin' => $isAdmin,
         ]);
 
-        Auth::login($user);
+        $message = $isAdmin 
+            ? 'Admin account created successfully! Please login to continue.'
+            : 'Account created successfully! Please login to continue.';
 
-        return redirect('/dashboard');
+        return redirect()->route('login')->with('success', $message);
     }
 
     // 🔹 Logout
