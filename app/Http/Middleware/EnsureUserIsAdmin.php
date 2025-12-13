@@ -5,31 +5,27 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsAdmin
 {
-    public function handle(Request $request, Closure $next)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
 
-        if (!$user) {
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Unauthorized'], 401);
-            }
-            // Store intended URL and redirect to login
-            return redirect()->route('login')->with('error', 'Please login to access the admin dashboard.');
+        if (! $user) {
+            return redirect()->route('login');
         }
 
-        // Check the Model's 'is_admin' column
-        $isAdmin = $user->is_admin ?? false;
-
-        if (!$isAdmin) {
-            if ($request->expectsJson()) {
-                return response()->json(['message' => 'Forbidden'], 403); // STOP! Show 403 error.
-            }
+        if (! ($user->is_admin ?? false)) {
             abort(403, 'Access denied.');
         }
 
-        return $next($request); //GO! Pass to the controller.
+        return $next($request);
     }
 }

@@ -2,62 +2,84 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
-        DB::table('categories')->insert([
+        $categories = [
             [
-                'name' => 'Action',
-                'description' => 'Stories filled with intense battles, adventures, and physical challenges.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'Shonen',
+                'description' => 'Action-packed manga targeted at young male readers, featuring adventure, friendship, and determination.',
             ],
             [
-                'name' => 'Adventure',
-                'description' => 'Follows characters as they explore unknown worlds or go on grand journeys.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'name' => 'Shojo',
+                'description' => 'Romance and drama-focused manga targeted at young female readers, often featuring emotional stories.',
+            ],
+            [
+                'name' => 'Seinen',
+                'description' => 'Mature manga targeted at adult male readers, featuring complex themes and sophisticated storytelling.',
+            ],
+            [
+                'name' => 'Josei',
+                'description' => 'Mature manga targeted at adult female readers, focusing on realistic relationships and life experiences.',
+            ],
+            [
+                'name' => 'Isekai',
+                'description' => 'Fantasy genre where characters are transported to another world, often featuring RPG-like elements.',
             ],
             [
                 'name' => 'Fantasy',
-                'description' => 'Contains elements of magic, mythical creatures, and supernatural worlds.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Drama',
-                'description' => 'Focuses on emotional and character-driven storytelling.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'description' => 'Manga featuring magical worlds, supernatural elements, and fantastical creatures.',
             ],
             [
                 'name' => 'Romance',
-                'description' => 'Centers on love stories and emotional relationships between characters.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Comedy',
-                'description' => 'Aims to entertain readers with humor, jokes, and funny situations.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'name' => 'Supernatural',
-                'description' => 'Involves spirits, curses, or phenomena beyond the natural world.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'description' => 'Manga focusing on romantic relationships, love stories, and emotional connections.',
             ],
             [
                 'name' => 'Horror',
-                'description' => 'Evokes fear through eerie themes, monsters, or psychological terror.',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'description' => 'Manga featuring suspense, supernatural elements, and psychological thrills.',
             ],
-        ]);
+            [
+                'name' => 'Sci-Fi',
+                'description' => 'Manga featuring futuristic technology, space exploration, and scientific concepts.',
+            ],
+            [
+                'name' => 'Comedy',
+                'description' => 'Lighthearted manga focused on humor, gags, and entertaining situations.',
+            ],
+        ];
+
+        $created = 0;
+        $skipped = 0;
+
+        foreach ($categories as $category) {
+            $slug = Str::slug($category['name']);
+            
+            $existing = Category::where('slug', $slug)->first();
+            
+            if (!$existing) {
+                Category::create([
+                    'name' => $category['name'],
+                    'description' => $category['description'],
+                    'slug' => $slug,
+                ]);
+                $created++;
+            } else {
+                $skipped++;
+            }
+        }
+
+        if ($created > 0) {
+            $this->command->info("Categories seeded successfully! Created: {$created}, Skipped: {$skipped}");
+        } else {
+            $this->command->info("All categories already exist. Skipped: {$skipped}");
+        }
     }
 }

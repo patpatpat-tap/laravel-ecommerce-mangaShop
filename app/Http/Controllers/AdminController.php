@@ -2,34 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
-use App\Models\Manga;
-use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        // Get stats
-        $totalUsers = User::count();
-        $totalAdmins = User::where('is_admin', true)->count();
-        $totalMangas = Manga::count();
-        
-        // Get categories from file
-        $filePath = 'categories.json';
-        $categories = [];
-        if (Storage::exists($filePath)) {
-            $categories = json_decode(Storage::get($filePath), true);
-        }
-        $totalCategories = count($categories);
+        $stats = [
+            'total_orders' => Order::count(),
+            'pending_orders' => Order::where('status', 'pending')->count(),
+            'total_products' => Product::count(),
+            'total_users' => User::where('is_admin', false)->count(),
+            'recent_orders' => Order::with('user')->latest()->take(5)->get(),
+        ];
 
-        return view('admin.dashboard', compact(
-            'totalUsers',
-            'totalAdmins',
-            'totalMangas',
-            'totalCategories'
-        ));
+        return view('admin.dashboard', compact('stats'));
+    }
+
+    public function orders()
+    {
+        $orders = Order::with('user', 'items.product')
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.orders.index', compact('orders'));
+    }
+
+    public function users()
+    {
+        $users = User::where('is_admin', false)->latest()->paginate(15);
+        return view('admin.users.index', compact('users'));
     }
 }

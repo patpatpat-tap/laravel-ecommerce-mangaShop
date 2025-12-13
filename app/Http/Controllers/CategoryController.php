@@ -2,96 +2,95 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
 
 class CategoryController extends Controller
 {
-    private $filePath = 'categories.json';
-
-    // 🟢 Get categories from file
-    private function getCategories()
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        if (!Storage::exists($this->filePath)) {
-            Storage::put($this->filePath, json_encode([]));
-        }
-        return json_decode(Storage::get($this->filePath), true);
+        $categories = Category::latest()->paginate(15);
+        return view('admin.categories.index', compact('categories'));
     }
 
-    // 🔵 Save categories back to file
-    private function saveCategories($categories)
-    {
-        Storage::put($this->filePath, json_encode($categories, JSON_PRETTY_PRINT));
-    }
-
-    // 🟩 Show form to create a category
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
-        return view('categories.create');
+        return view('admin.categories.create');
     }
 
-    // 🟦 Store new category
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100'
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:categories'],
+            'description' => ['nullable', 'string'],
         ]);
 
-        $categories = $this->getCategories();
+        $validated['slug'] = Str::slug($validated['name']);
 
-        $categories[] = [
-            'id' => Str::uuid()->toString(),
-            'name' => $request->name,
-        ];
+        Category::create($validated);
 
-        $this->saveCategories($categories);
-
-        return redirect()->route('dashboard')->with('success', 'Category added successfully.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Category created successfully!');
     }
 
-    // 🟨 Show form to edit a category
-    public function edit($id)
+    /**
+     * Display the specified resource.
+     */
+    public function show(Category $category)
     {
-        $categories = $this->getCategories();
-        $category = collect($categories)->firstWhere('id', $id);
-
-        if (!$category) {
-            abort(404, 'Category not found.');
-        }
-
-        return view('categories.edit', compact('category'));
+        $category->load('products');
+        return view('admin.categories.show', compact('category'));
     }
 
-    // 🟧 Update existing category
-    public function update(Request $request, $id)
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Category $category)
     {
-        $request->validate([
-            'name' => 'required|string|max:100'
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255', 'unique:categories,name,' . $category->id],
+            'description' => ['nullable', 'string'],
         ]);
 
-        $categories = $this->getCategories();
+        $validated['slug'] = Str::slug($validated['name']);
 
-        foreach ($categories as &$cat) {
-            if ($cat['id'] === $id) {
-                $cat['name'] = $request->name;
-                break;
-            }
-        }
+        $category->update($validated);
 
-        $this->saveCategories($categories);
-
-        return redirect()->route('dashboard')->with('success', 'Category updated successfully.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Category updated successfully!');
     }
 
-    // 🟥 Delete a category
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Category $category)
     {
-        $categories = $this->getCategories();
-        $categories = array_filter($categories, fn($cat) => $cat['id'] !== $id);
+        if ($category->products()->count() > 0) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Cannot delete category with associated products!');
+        }
 
-        $this->saveCategories($categories);
+        $category->delete();
 
-        return redirect()->route('dashboard')->with('success', 'Category deleted successfully.');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Category deleted successfully!');
     }
 }

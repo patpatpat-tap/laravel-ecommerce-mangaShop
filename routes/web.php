@@ -1,44 +1,59 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\MangaController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Route;
 
-// 🔹 Redirect root to login page (always)
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Public routes
+Route::get('/', [HomeController::class, 'landing'])->name('landing');
+Route::get('/shop', [HomeController::class, 'index'])->name('home');
 
-// 🔹 Login route (accessible to everyone)
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-
-// 🔹 Authentication routes (only for guests)
+// Authentication routes
 Route::middleware('guest')->group(function () {
-    Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
 });
 
-// Routes accessible to authenticated users
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [MangaController::class, 'dashboard'])->name('dashboard');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Manga browsing (for all authenticated users)
-    Route::get('/manga', [MangaController::class, 'index'])->name('manga.index');
-    Route::get('/manga/{id}', [MangaController::class, 'show'])->name('manga.show');
+    // Product show (public but requires auth for cart)
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-    // Admin routes (only for admins)
-    Route::middleware(['admin'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-        
-        // Category management
-        Route::get('/categories/create', [CategoryController::class, 'create'])->name('category.create');
-        Route::post('/categories', [CategoryController::class, 'store'])->name('category.store');
-        Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('category.edit');
-        Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('category.update');
-        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
-    });
+    // Cart routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::put('/cart/update/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
+    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+
+    // Order routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+});
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/orders', [AdminController::class, 'orders'])->name('orders');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+
+    // Product management
+    Route::resource('products', ProductController::class);
+
+    // Category management
+    Route::resource('categories', CategoryController::class);
+
+    // Order status update
+    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 });
