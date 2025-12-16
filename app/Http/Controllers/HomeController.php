@@ -129,14 +129,35 @@ class HomeController extends Controller
             }
         }
         
-        // Get monthly releases (products created this month only, exclude from newly added)
-        $monthlyReleases = Product::with('category')
+        // Get best sellers - products with most orders, excluding Jujutsu Kaisen
+        $bestSellers = Product::with('category')
+            ->withCount('orderItems')
             ->where('is_active', true)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->latest()
+            ->where('stock', '>', 0)
+            ->where(function($q) {
+                $q->where('name', 'not like', '%Jujutsu%')
+                  ->where('name', 'not like', '%jujutsu%')
+                  ->where('name', 'not like', '%JUJUTSU%');
+            })
+            ->orderBy('order_items_count', 'desc')
+            ->orderBy('created_at', 'desc')
             ->take(12)
             ->get();
+        
+        // If no best sellers (no orders yet), get diverse products excluding Jujutsu Kaisen
+        if ($bestSellers->count() < 6) {
+            $bestSellers = Product::with('category')
+                ->where('is_active', true)
+                ->where('stock', '>', 0)
+                ->where(function($q) {
+                    $q->where('name', 'not like', '%Jujutsu%')
+                      ->where('name', 'not like', '%jujutsu%')
+                      ->where('name', 'not like', '%JUJUTSU%');
+                })
+                ->inRandomOrder()
+                ->take(12)
+                ->get();
+        }
 
         // Get newly added mangas (latest products, but exclude monthly releases to avoid duplicates)
         $newlyAdded = Product::with('category')
@@ -169,6 +190,6 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('dashboard', compact('categories', 'featuredSeriesName', 'featuredSeriesProducts', 'featuredProduct', 'monthlyReleases', 'newlyAdded', 'searchQuery', 'searchResults'));
+        return view('dashboard', compact('categories', 'featuredSeriesName', 'featuredSeriesProducts', 'featuredProduct', 'bestSellers', 'newlyAdded', 'searchQuery', 'searchResults'));
     }
 }

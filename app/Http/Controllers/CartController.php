@@ -32,6 +32,12 @@ class CartController extends Controller
         if ($cartItem) {
             $newQuantity = $cartItem->quantity + $request->quantity;
             if ($newQuantity > $product->stock) {
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Not enough stock available!'
+                    ], 422);
+                }
                 return back()->with('error', 'Not enough stock available!');
             }
             $cartItem->update(['quantity' => $newQuantity]);
@@ -41,6 +47,18 @@ class CartController extends Controller
                 'product_id' => $product->id,
                 'quantity' => $request->quantity,
                 'price' => $product->price,
+            ]);
+        }
+
+        // Refresh cart to get updated count
+        $cart->refresh();
+        $cartCount = $cart->items->sum('quantity');
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart!',
+                'cart_count' => $cartCount
             ]);
         }
 

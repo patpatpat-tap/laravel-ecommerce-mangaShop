@@ -364,6 +364,49 @@
         .user-pill:hover {
             color: var(--gold);
         }
+        .user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+        }
+        .user-dropdown.show {
+            display: block;
+        }
+        .user-dropdown-item {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            width: 100%;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .user-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        .user-dropdown-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--red);
+        }
+        .user-dropdown-item.logout {
+            color: var(--red);
+        }
+        .user-dropdown-item.logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
         .user-avatar {
             width: 32px;
             height: 32px;
@@ -427,12 +470,12 @@
     </style>
 </head>
 <body>
-    @if(request()->routeIs('dashboard'))
+    @if(request()->routeIs('dashboard') || request()->routeIs('cart.index') || request()->routeIs('orders.index'))
         <nav class="dashboard-header">
             <div class="search-container">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 2rem;">
                     <!-- Logo on the left -->
-                    <a href="{{ route('landing') }}" class="logo-section">
+                    <a href="{{ route('dashboard') }}" class="logo-section">
                         <div class="logo-icon">
                             <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -450,9 +493,9 @@
                             </svg>
                             <span>Cart</span>
                             @auth
-                                @if(auth()->user()->cart && auth()->user()->cart->items->count() > 0)
-                                    <span class="cart-badge">{{ auth()->user()->cart->items->sum('quantity') }}</span>
-                                @endif
+                                <span class="cart-badge" style="{{ auth()->user()->cart && auth()->user()->cart->items->count() > 0 ? '' : 'display: none;' }}">
+                                    {{ auth()->user()->cart ? auth()->user()->cart->items->sum('quantity') : 0 }}
+                                </span>
                             @endauth
                         </a>
 
@@ -468,14 +511,25 @@
 
                         <!-- User Pill -->
                         @auth
-                            <div class="user-pill">
+                            <div class="user-pill" onclick="toggleUserDropdown(event)">
                                 <div class="user-avatar">
-                                    <svg style="width: 22px; height: 22px; color: white;" fill="currentColor" viewBox="0 0 24 24">
+                                    <svg style="width: 22px; height: 22px; color: var(--gold);" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z"/>
                                     </svg>
                                 </div>
-                                <div style="font-weight: 600;">
+                                <div style="font-weight: 600; color: var(--text-dark);">
                                     {{ auth()->user()->name }}
+                                </div>
+                                <svg style="width: 16px; height: 16px; color: var(--text-dark);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                                <div class="user-dropdown" id="userDropdown">
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="user-dropdown-item logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">
+                                            <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         @endauth
@@ -483,12 +537,12 @@
                 </div>
             </div>
         </nav>
-    @elseif(!request()->routeIs('products.show') && !request()->routeIs('cart.index') && !request()->routeIs('checkout'))
+    @elseif(!request()->routeIs('products.show') && !request()->routeIs('cart.index') && !request()->routeIs('orders.index') && !request()->routeIs('checkout'))
     <nav style="background-color: var(--light-beige); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-bottom: 2px solid var(--gold-outline); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; width: 100%;">
-        <div class="nav-container" style="height: 6rem; display: flex; justify-content: space-between; align-items: center;">
+        <div class="nav-container" style="height: 6rem; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1400px; margin: 0 auto; width: 100%;">
             <div class="flex-shrink-0 flex items-center">
-                <a href="{{ route('landing') }}" class="logo-section" style="color: var(--text-dark); text-decoration: none;">
-                    <div class="logo-icon" style="background-color: var(--gold);">
+                <a href="{{ route('landing') }}" class="logo-section" style="color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 1rem;">
+                    <div class="logo-icon" style="background-color: var(--gold); width: 3.5rem; height: 3.5rem; border-radius: 16px; display: flex; align-items: center; justify-content: center;">
                         <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                         </svg>
@@ -496,10 +550,51 @@
                     <span class="logo-text" style="color: var(--text-dark); font-size: 1.75rem; font-weight: 800;">Manga Shop</span>
                 </a>
             </div>
-            <div style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+            <div style="display: flex !important; align-items: center; gap: 1rem; flex-shrink: 0; visibility: visible !important;">
                 @guest
-                    <button type="button" onclick="openModal('loginModal')" class="btn-hero" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important;">Sign In</button>
-                    <button type="button" onclick="openModal('registerModal')" class="btn-hero-secondary" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important;">Sign Up</button>
+                    <button type="button" onclick="openModal('loginModal')" class="btn-hero" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); background-color: var(--gold); color: var(--text-dark); border: 2px solid var(--gold-outline); cursor: pointer; border: none;">Sign In</button>
+                    <button type="button" onclick="openModal('registerModal')" class="btn-hero-secondary" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); background-color: #000000; color: var(--red); border: 2px solid var(--red); cursor: pointer; border: none;">Sign Up</button>
+                @else
+                    @auth
+                        <a href="{{ route('cart.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border-radius: 8px; transition: all 0.2s; text-decoration: none;">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                            <span>Cart</span>
+                            @if(auth()->user()->cart && auth()->user()->cart->items->count() > 0)
+                                <span class="cart-badge" style="position: absolute; top: -8px; right: -8px; background-color: var(--red); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
+                                    {{ auth()->user()->cart->items->sum('quantity') }}
+                                </span>
+                            @endif
+                        </a>
+                        <a href="{{ route('orders.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border-radius: 8px; transition: all 0.2s; text-decoration: none;">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
+                            </svg>
+                            <span>Orders</span>
+                        </a>
+                        <div class="user-pill" onclick="toggleUserDropdown(event)" style="position: relative; display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; background: transparent; border-radius: 25px; color: var(--text-dark); cursor: pointer; transition: all 0.2s;">
+                            <div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center;">
+                                <svg style="width: 22px; height: 22px; color: var(--gold);" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z"/>
+                                </svg>
+                            </div>
+                            <div style="font-weight: 600; color: var(--text-dark);">
+                                {{ auth()->user()->name }}
+                            </div>
+                            <svg style="width: 16px; height: 16px; color: var(--text-dark);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                            <div class="user-dropdown" id="userDropdown" style="position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); min-width: 180px; z-index: 1000; display: none; overflow: hidden;">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="user-dropdown-item logout" style="display: block; padding: 0.75rem 1rem; color: var(--red); text-decoration: none; transition: all 0.2s; border-bottom: 1px solid rgba(0, 0, 0, 0.05); width: 100%; text-align: left; border: none; background: none; cursor: pointer; font-size: 0.95rem;">
+                                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endauth
                 @endguest
             </div>
         </div>
@@ -518,7 +613,7 @@
         </div>
     @endif
 
-    <main style="padding-top: 6rem;">
+    <main style="padding-top: {{ request()->routeIs('dashboard') || request()->routeIs('cart.index') || request()->routeIs('orders.index') ? '8rem' : '6rem' }};">
         @yield('content')
     </main>
 
@@ -753,6 +848,30 @@
                     ['loginModal','registerModal'].forEach(closeModal);
                 }
             });
+        });
+    </script>
+    
+    <script>
+        // User Dropdown Toggle
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('userDropdown');
+            const isOpen = dropdown.classList.contains('show');
+            
+            // Close all dropdowns first
+            document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('show'));
+            
+            // Toggle this dropdown
+            if (!isOpen) {
+                dropdown.classList.add('show');
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.user-pill')) {
+                document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('show'));
+            }
         });
     </script>
     @stack('scripts')

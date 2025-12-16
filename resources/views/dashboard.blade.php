@@ -27,9 +27,13 @@
     }
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 2rem;
         margin-bottom: 4rem;
+    }
+    .best-sellers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.5rem;
     }
     .product-card {
         background: white;
@@ -39,6 +43,13 @@
         transition: all 0.3s ease;
         cursor: pointer;
     }
+    .best-sellers-grid .product-card {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    }
+    .best-sellers-grid .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+    }
     .product-card:hover {
         transform: translateY(-8px);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -47,6 +58,11 @@
         width: 100%;
         height: 260px;
         object-fit: cover;
+    }
+    .best-sellers-grid .product-image {
+        height: 320px;
+    }
+    .product-image-placeholder {
         background: var(--light-beige);
     }
     .product-image-placeholder {
@@ -57,6 +73,9 @@
         align-items: center;
         justify-content: center;
         color: var(--text-light);
+    }
+    .best-sellers-grid .product-image-placeholder {
+        height: 320px;
     }
     .product-info {
         padding: 1.25rem;
@@ -324,6 +343,8 @@
         transition: all 0.2s ease;
         width: 100%;
         text-align: center;
+        display: block;
+        text-decoration: none;
     }
     .quick-view-btn:hover {
         background-color: var(--dark-gold);
@@ -407,11 +428,18 @@
     /* Regular Product Grid - Full Width */
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 2rem;
         margin-bottom: 4rem;
         width: 100%;
         padding: 0 2rem;
+    }
+    .best-sellers-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2.5rem;
+    }
+    .best-sellers-grid .product-image {
+        height: 320px;
     }
     /* Hero Section Styles */
     .hero-section {
@@ -555,17 +583,7 @@
                                 {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
                             </div>
                         </div>
-                        <button type="button"
-                            class="quick-view-btn"
-                            data-product="{{ json_encode([
-                                'id' => $product->id,
-                                'name' => $product->name,
-                                'price' => $product->price,
-                                'image' => $product->image,
-                                'url' => route('products.show', $product),
-                                'stock' => $product->stock,
-                                'cart_url' => route('cart.add', $product),
-                            ]) }}">
+                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
                             Quick add
                         </button>
                     </a>
@@ -628,17 +646,7 @@
                                         </div>
                                     </div>
                                 </a>
-                                <button type="button"
-                                    class="quick-view-btn"
-                                    data-product="{{ json_encode([
-                                        'id' => $product->id,
-                                        'name' => $product->name,
-                                        'price' => $product->price,
-                                        'image' => $product->image,
-                                        'url' => route('products.show', $product),
-                                        'stock' => $product->stock,
-                                        'cart_url' => route('cart.add', $product),
-                                    ]) }}">
+                                <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
                                     Quick add
                                 </button>
                             </div>
@@ -654,14 +662,14 @@
             </div>
         @endif
 
-        <!-- This Month's New Release -->
+        <!-- Best Sellers -->
         <div class="section-title">
-            <span>This Month's New Release</span>
+            <span>Best Sellers</span>
             <a href="{{ route('home') }}" class="view-all-link">View all</a>
         </div>
-        @if($monthlyReleases->count() > 0)
-            <div class="products-grid">
-                @foreach($monthlyReleases as $product)
+        @if($bestSellers->count() > 0)
+            <div class="products-grid best-sellers-grid">
+                @foreach($bestSellers as $product)
                     <a href="{{ route('products.show', $product) }}" class="product-card">
                         @if($product->image)
                             <img src="{{ $product->image }}" alt="{{ $product->name }}" class="product-image">
@@ -678,17 +686,7 @@
                                 {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
                             </div>
                         </div>
-                        <button type="button"
-                            class="quick-view-btn"
-                            data-product="{{ json_encode([
-                                'id' => $product->id,
-                                'name' => $product->name,
-                                'price' => $product->price,
-                                'image' => $product->image,
-                                'url' => route('products.show', $product),
-                                'stock' => $product->stock,
-                                'cart_url' => route('cart.add', $product),
-                            ]) }}">
+                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
                             Quick add
                         </button>
                     </a>
@@ -723,17 +721,7 @@
                                 <span class="status-dot {{ $product->stock <= 0 ? 'sold-out' : 'available' }}"></span>
                                 {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
                             </div>
-                        <button type="button"
-                            class="quick-view-btn"
-                            data-product="{{ json_encode([
-                                'id' => $product->id,
-                                'name' => $product->name,
-                                'price' => $product->price,
-                                'image' => $product->image,
-                                'url' => route('products.show', $product),
-                                'stock' => $product->stock,
-                                'cart_url' => route('cart.add', $product),
-                            ]) }}">
+                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
                             Quick add
                         </button>
                         </div>
@@ -752,132 +740,133 @@
 
 @push('scripts')
 <script>
+    // Quick Add to Cart Functionality
     document.addEventListener('DOMContentLoaded', () => {
-        const modal = document.createElement('div');
-        modal.id = 'quickViewModal';
-        modal.style.display = 'none';
-        modal.innerHTML = `
-            <div style="
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 3000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 1rem;
-            ">
-                <div style="
-                    background: white;
-                    border-radius: 16px;
-                    width: min(900px, 100%);
-                    max-height: 90vh;
-                    overflow: auto;
-                    padding: 1.75rem;
-                    box-shadow: 0 10px 32px rgba(0,0,0,0.2);
-                ">
-                    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                        <div style="flex: 1 1 320px; display: flex; justify-content: center; align-items: center; background: #f9f9f3; border-radius: 12px; padding: 1rem;">
-                            <img id="qv-image" src="" alt="" style="width: 100%; height: 100%; max-height: 480px; object-fit: contain; border-radius: 8px; background: white;">
-                        </div>
-                        <div style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 0.75rem;">
-                            <h2 id="qv-name" style="font-size: 1.6rem; font-weight: 800; margin: 0;"></h2>
-                            <div id="qv-price" style="font-size: 1.4rem; font-weight: 900; color: var(--gold);"></div>
-                            <a id="qv-link" href="#" style="color: var(--red); font-weight: 700; text-decoration: none;">View full details</a>
-                            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
-                                <div style="font-weight: 700;">Quantity:</div>
-                                <div style="display: flex; align-items: center; border: 2px solid #ddd; border-radius: 10px; overflow: hidden;">
-                                    <button type="button" id="qv-minus" style="width: 40px; height: 40px; border: none; background: #f5f5f5; font-size: 1.25rem; cursor: pointer;">-</button>
-                                    <input type="number" id="qv-qty" value="1" min="1" style="width: 60px; height: 40px; border: none; text-align: center; font-weight: 700;">
-                                    <button type="button" id="qv-plus" style="width: 40px; height: 40px; border: none; background: #f5f5f5; font-size: 1.25rem; cursor: pointer;">+</button>
-                                </div>
-                            </div>
-                            <button id="qv-add" type="button" style="
-                                margin-top: 0.5rem;
-                                background: #0d9a8c;
-                                color: white;
-                                border: none;
-                                border-radius: 12px;
-                                padding: 0.9rem 1.2rem;
-                                font-weight: 800;
-                                font-size: 1rem;
-                                cursor: pointer;
-                                display: inline-flex;
-                                align-items: center;
-                                gap: 0.5rem;
-                            ">
-                                <span style="font-size: 1.1rem;">🛒</span> Add to Cart
-                            </button>
-                            <div id="qv-status" style="font-size: 0.95rem; color: #777;"></div>
-                        </div>
-                    </div>
-                    <button id="qv-close" type="button" style="
-                        position: absolute;
-                        top: 12px;
-                        right: 12px;
-                        background: none;
-                        border: none;
-                        font-size: 1.5rem;
-                        cursor: pointer;
-                    ">&times;</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-
-        let currentProduct = null;
-
-        function openModal(data) {
-            currentProduct = data;
-            document.getElementById('qv-name').textContent = data.name;
-            document.getElementById('qv-price').textContent = `₱${Number(data.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-            document.getElementById('qv-link').href = data.url;
-            document.getElementById('qv-image').src = data.image || '';
-            document.getElementById('qv-qty').value = 1;
-            document.getElementById('qv-status').textContent = data.stock <= 0 ? 'Out of stock' : (data.stock < 5 ? 'Special Order' : 'On hand');
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            modal.style.display = 'none';
-            currentProduct = null;
-        }
-
-        document.getElementById('qv-close').addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-        document.getElementById('qv-minus').addEventListener('click', () => {
-            const qty = document.getElementById('qv-qty');
-            qty.value = Math.max(1, parseInt(qty.value || '1', 10) - 1);
-        });
-        document.getElementById('qv-plus').addEventListener('click', () => {
-            const qty = document.getElementById('qv-qty');
-            qty.value = Math.max(1, parseInt(qty.value || '1', 10) + 1);
-        });
-
+        // Add click handlers to all Quick add buttons
         document.querySelectorAll('.quick-view-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const data = JSON.parse(btn.getAttribute('data-product'));
-                openModal(data);
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const productId = btn.getAttribute('data-product-id');
+                
+                if (!productId) return;
+                
+                // Disable button during request
+                btn.disabled = true;
+                const originalText = btn.textContent;
+                btn.textContent = 'Adding...';
+                
+                try {
+                    const response = await fetch(`/cart/add/${productId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({ quantity: 1 })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        // Update cart badge
+                        updateCartBadge(data.cart_count);
+                        
+                        // Show success notification
+                        showNotification('Product added to cart!', 'success');
+                        
+                        // Reset button
+                        btn.textContent = 'Added!';
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.disabled = false;
+                        }, 1000);
+                    } else {
+                        showNotification(data.message || 'Failed to add to cart', 'error');
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Error adding to cart:', error);
+                    showNotification('An error occurred. Please try again.', 'error');
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
             });
         });
-
-        document.getElementById('qv-add').addEventListener('click', async () => {
-            if (!currentProduct) return;
-            const qty = Math.max(1, parseInt(document.getElementById('qv-qty').value || '1', 10));
-            try {
-                await axios.post(currentProduct.cart_url, { quantity: qty });
-                document.getElementById('qv-add').textContent = 'Added!';
-                setTimeout(() => {
-                    document.getElementById('qv-add').textContent = 'Add to Cart';
-                    closeModal();
-                    window.location.reload();
-                }, 600);
-            } catch (err) {
-                alert('Unable to add to cart. Please try again.');
+        
+        // Function to update cart badge
+        function updateCartBadge(count) {
+            // Try to find cart badge in dashboard header
+            let cartBadge = document.querySelector('.dashboard-header .cart-badge');
+            
+            // If not found, try in main nav
+            if (!cartBadge) {
+                cartBadge = document.querySelector('nav .cart-badge');
             }
-        });
+            
+            if (cartBadge) {
+                if (count > 0) {
+                    cartBadge.textContent = count;
+                    cartBadge.style.display = 'flex';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+            }
+        }
+        
+        // Function to show notification
+        function showNotification(message, type = 'success') {
+            // Remove existing notification if any
+            const existing = document.querySelector('.cart-notification');
+            if (existing) {
+                existing.remove();
+            }
+            
+            const notification = document.createElement('div');
+            notification.className = `cart-notification ${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            // Add animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
     });
 
     // Featured Volumes Carousel Functionality - Make it globally accessible

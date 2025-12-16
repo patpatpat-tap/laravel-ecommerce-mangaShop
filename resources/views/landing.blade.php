@@ -102,50 +102,50 @@
 </section>
 
 <!-- How It Works / What You Can Do Section -->
-<section class="w-full py-24 md:py-40" style="background-color: white; margin-top: 0;">
+<section class="w-full py-24 md:py-40" style="background-color: #173337; margin-top: 0;">
     <div class="mx-auto" style="max-width: 1400px; padding: 5rem 2rem;">
         <div class="text-center mb-24">
-            <h2 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--gold);">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4" style="color: #E8D2A3;">
                 How It Works
             </h2>
         </div>
         
         <div class="mx-auto" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-top: 3rem; max-width: 1200px;">
             <!-- Card 1: Browse Manga -->
-            <div class="document-card h-full flex flex-col items-center">
-                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: var(--gold); border-radius: 16px; aspect-ratio: 1;">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="document-card h-full flex flex-col items-center" style="background-color: rgba(232, 210, 163, 0.1); border-color: rgba(232, 210, 163, 0.3);">
+                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: #E8D2A3; border-radius: 16px; aspect-ratio: 1;">
+                    <svg class="w-8 h-8" style="color: #173337;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4" style="color: var(--gold);">Browse Manga</h3>
-                <p class="leading-relaxed" style="color: var(--text-light);">
+                <h3 class="text-2xl font-bold mb-4" style="color: #E8D2A3;">Browse Manga</h3>
+                <p class="leading-relaxed" style="color: #E8D2A3;">
                     Explore genres, volumes, and latest releases
                 </p>
             </div>
 
             <!-- Card 2: Add to Cart -->
-            <div class="document-card h-full flex flex-col items-center">
-                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: var(--red); border-radius: 16px; aspect-ratio: 1;">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="document-card h-full flex flex-col items-center" style="background-color: rgba(232, 210, 163, 0.1); border-color: rgba(232, 210, 163, 0.3);">
+                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: #E8D2A3; border-radius: 16px; aspect-ratio: 1;">
+                    <svg class="w-8 h-8" style="color: #173337;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4" style="color: var(--red);">Add to Cart</h3>
-                <p class="leading-relaxed" style="color: var(--text-light);">
+                <h3 class="text-2xl font-bold mb-4" style="color: #E8D2A3;">Add to Cart</h3>
+                <p class="leading-relaxed" style="color: #E8D2A3;">
                     Select your favorite manga
                 </p>
             </div>
 
             <!-- Card 3: Checkout & Order -->
-            <div class="document-card h-full flex flex-col items-center">
-                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: var(--gold); border-radius: 16px; aspect-ratio: 1;">
-                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="document-card h-full flex flex-col items-center" style="background-color: rgba(232, 210, 163, 0.1); border-color: rgba(232, 210, 163, 0.3);">
+                <div class="flex items-center justify-center mb-6" style="width: 3.5rem; height: 3.5rem; background-color: #E8D2A3; border-radius: 16px; aspect-ratio: 1;">
+                    <svg class="w-8 h-8" style="color: #173337;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <h3 class="text-2xl font-bold mb-4" style="color: var(--gold);">Checkout & Order</h3>
-                <p class="leading-relaxed" style="color: var(--text-light);">
+                <h3 class="text-2xl font-bold mb-4" style="color: #E8D2A3;">Checkout & Order</h3>
+                <p class="leading-relaxed" style="color: #E8D2A3;">
                     Place your order and track it easily
                 </p>
             </div>
