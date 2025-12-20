@@ -46,3 +46,9 @@ The seeder automatically prepends `/images/jujutsu-kaisen/` to the filename when
 - Height: 600-800px
 - Aspect Ratio: 2:3 (typical manga cover ratio)
 
+
+
+
+
+
+

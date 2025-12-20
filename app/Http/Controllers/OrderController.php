@@ -90,6 +90,7 @@ class OrderController extends Controller
                 'quantity' => $item->quantity,
                 'price' => $item->price,
                 'subtotal' => $item->subtotal,
+                'qa_status' => 'pending', // Default QA status
             ]);
 
             // Update product stock
@@ -106,11 +107,31 @@ class OrderController extends Controller
     public function updateStatus(Request $request, Order $order)
     {
         $request->validate([
-            'status' => ['required', 'in:pending,paid,shipped,completed,cancelled'],
+            'status' => ['required', 'in:pending,paid,ready_to_ship,shipped,completed,cancelled'],
         ]);
 
         $order->update(['status' => $request->status]);
 
         return back()->with('success', 'Order status updated!');
+    }
+
+    public function updateQAStatus(Request $request, OrderItem $orderItem)
+    {
+        // Only admins can update QA status
+        if (!Auth::user()->is_admin) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
+        $request->validate([
+            'qa_status' => ['required', 'in:pending,approved,rejected'],
+        ]);
+
+        $orderItem->update(['qa_status' => $request->qa_status]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'QA status updated successfully',
+            'qa_status' => $orderItem->qa_status
+        ]);
     }
 }

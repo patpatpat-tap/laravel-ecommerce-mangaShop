@@ -12,6 +12,7 @@ class OrderItem extends Model
         'quantity',
         'price',
         'subtotal',
+        'qa_status',
     ];
 
     protected function casts(): array

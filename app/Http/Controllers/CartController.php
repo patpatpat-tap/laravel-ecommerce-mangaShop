@@ -73,6 +73,26 @@ class CartController extends Controller
 
         $cartItem->update(['quantity' => $request->quantity]);
 
+        // Refresh cart to get updated totals
+        $cart = $this->getOrCreateCart();
+        $cart->refresh();
+        $cart->load('items.product');
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Quantity updated!',
+                'item' => [
+                    'subtotal' => number_format($cartItem->subtotal, 2),
+                    'quantity' => $cartItem->quantity,
+                ],
+                'cart' => [
+                    'subtotal' => number_format($cart->total_price, 2),
+                    'total' => number_format($cart->total_price, 2),
+                ]
+            ]);
+        }
+
         return back()->with('success', 'Cart updated!');
     }
 

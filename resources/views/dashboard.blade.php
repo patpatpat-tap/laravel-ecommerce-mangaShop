@@ -5,14 +5,16 @@
 @section('content')
 <style>
     .section-title {
+        font-family: 'Poppins', 'Inter', sans-serif;
         font-size: 2rem;
-        font-weight: 800;
+        font-weight: 600;
         color: var(--text-dark);
+        opacity: 0.85;
         margin-bottom: 1.5rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 2rem;
+        letter-spacing: -0.02em;
     }
     .view-all-link {
         font-size: 1rem;
@@ -27,13 +29,13 @@
     }
     .products-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 2rem;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
         margin-bottom: 4rem;
     }
     .best-sellers-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 2.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
     }
     .product-card {
         background: white;
@@ -41,7 +43,13 @@
         overflow: hidden;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
         cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
     }
     .best-sellers-grid .product-card {
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
@@ -56,18 +64,18 @@
     }
     .product-image {
         width: 100%;
-        height: 260px;
+        height: 200px;
         object-fit: cover;
     }
     .best-sellers-grid .product-image {
-        height: 320px;
+        height: 200px;
     }
     .product-image-placeholder {
         background: var(--light-beige);
     }
     .product-image-placeholder {
         width: 100%;
-        height: 260px;
+        height: 200px;
         background: var(--light-beige);
         display: flex;
         align-items: center;
@@ -75,27 +83,73 @@
         color: var(--text-light);
     }
     .best-sellers-grid .product-image-placeholder {
-        height: 320px;
+        height: 200px;
     }
     .product-info {
-        padding: 1.25rem;
+        padding: 1rem;
     }
     .product-title {
+        font-family: 'Poppins', 'Inter', sans-serif;
         font-size: 1.1rem;
-        font-weight: 700;
+        font-weight: 500;
         color: var(--text-dark);
-        margin-bottom: 0.5rem;
+        opacity: 0.8;
+        margin-bottom: 0.25rem;
         line-height: 1.3;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .product-price {
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: var(--gold);
+    .product-category {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        opacity: 0.75;
+        margin-bottom: 0.25rem;
+    }
+    .product-author {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        opacity: 0.75;
         margin-bottom: 0.75rem;
+    }
+    .product-price {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gold);
+        opacity: 0.9;
+    }
+    .product-info .flex {
+        flex-wrap: nowrap;
+    }
+    .add-to-cart-btn {
+        background-color: #22c55e;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.375rem;
+        font-size: 0.8125rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    .add-to-cart-btn:hover {
+        background-color: #16a34a;
+    }
+    .add-to-cart-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background-color: #9ca3af;
+    }
+    .cart-icon {
+        width: 16px;
+        height: 16px;
     }
     .product-status {
         display: inline-flex;
@@ -136,7 +190,9 @@
         text-align: center;
         padding: 3rem;
         color: var(--text-light);
-        font-size: 1.1rem;
+        opacity: 0.85;
+        font-size: 1.125rem;
+        font-family: 'Poppins', 'Inter', sans-serif;
     }
     /* Add padding to content to account for fixed header */
     .dashboard-content {
@@ -148,27 +204,29 @@
     
     /* Featured Section - Two Column Layout (30% / 70%) */
     .featured-heading {
+        font-family: 'Poppins', 'Inter', sans-serif;
         font-size: 2rem;
-        font-weight: 900;
+        font-weight: 600;
         color: var(--text-dark);
-        margin: 3rem 0 1rem 0;
-        padding: 0 2rem;
+        opacity: 0.85;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        letter-spacing: -0.02em;
     }
     .featured-section {
         margin-top: 0.5rem;
         margin-bottom: 3.5rem;
         background: white;
         border-radius: 20px;
-        padding: 2.5rem 2.75rem;
+        padding: 2rem 2.5rem;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        margin-left: 2rem;
-        margin-right: 2rem;
     }
     .featured-container {
         display: grid;
-        grid-template-columns: 32% 68%;
+        grid-template-columns: 35% 65%;
         gap: 2rem;
-        align-items: center;
+        align-items: start;
     }
     
     /* Left Column - Article */
@@ -177,21 +235,22 @@
         flex-direction: column;
     }
     .featured-series-title {
-        font-size: 2.2rem;
+        font-size: 1.875rem;
         font-weight: 900;
         color: var(--red);
-        margin-bottom: 0.35rem;
-        line-height: 1.1;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
     }
     .featured-series-subtitle {
-        font-size: 1.05rem;
+        font-size: 0.95rem;
         color: var(--red);
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         font-weight: 600;
+        line-height: 1.4;
     }
     .featured-illustration {
         width: 100%;
-        height: 460px;
+        height: 320px;
         background: var(--light-beige);
         border-radius: 16px;
         display: flex;
@@ -213,7 +272,7 @@
     .featured-volumes-wrapper {
         position: relative;
         width: 100%;
-        padding: 0 3rem; /* Space for arrows */
+        padding: 0 3.5rem; /* Space for arrows */
         overflow: visible;
     }
     .featured-volumes {
@@ -227,14 +286,15 @@
         -ms-overflow-style: none; /* IE and Edge */
         width: 100%;
         -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        justify-content: flex-start;
     }
     .featured-volumes::-webkit-scrollbar {
         display: none; /* Chrome, Safari, Opera */
     }
     .featured-volume-card {
-        flex: 0 0 calc(33.333% - 1rem);
-        min-width: calc(33.333% - 1rem);
-        max-width: calc(33.333% - 1rem);
+        flex: 0 0 calc(33.333% - 0.833rem);
+        min-width: calc(33.333% - 0.833rem);
+        max-width: calc(33.333% - 0.833rem);
     }
     .carousel-nav-button {
         position: absolute;
@@ -254,6 +314,12 @@
         transition: all 0.3s ease;
         z-index: 10;
     }
+    .carousel-nav-button.prev {
+        left: 0.5rem;
+    }
+    .carousel-nav-button.next {
+        right: 0.5rem;
+    }
     .carousel-nav-button:hover:not(:disabled) {
         background: var(--dark-gold);
         transform: translateY(-50%) scale(1.1);
@@ -272,34 +338,31 @@
         background: white;
         border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: block;
         cursor: pointer;
         border: 2px solid transparent;
         display: flex;
         flex-direction: column;
         height: 100%;
     }
-    .featured-volume-link {
-        display: block;
-        color: inherit;
-        text-decoration: none;
-    }
     .featured-volume-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.14);
-        border-color: var(--gold);
+        transform: translateY(-8px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
     .featured-volume-image {
         width: 100%;
-        height: 320px;
-        object-fit: cover; /* fill card like products */
+        height: 200px;
+        object-fit: cover;
         background: var(--light-beige);
         padding: 0;
     }
     .featured-volume-image-placeholder {
         width: 100%;
-        height: 320px;
+        height: 200px;
         background: var(--light-beige);
         display: flex;
         align-items: center;
@@ -308,49 +371,45 @@
         font-size: 0.9rem;
     }
     .featured-volume-info {
-        padding: 1.1rem 1.1rem 1.25rem 1.1rem;
+        padding: 1rem;
         flex: 1;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
     }
     .featured-volume-title {
-        font-size: 1.05rem;
-        font-weight: 800;
+        font-family: 'Poppins', 'Inter', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 500;
         color: var(--text-dark);
-        margin-bottom: 0.6rem;
-        line-height: 1.35;
+        opacity: 0.8;
+        margin-bottom: 0.25rem;
+        line-height: 1.3;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+    .featured-volume-category {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        opacity: 0.75;
+        margin-bottom: 0.25rem;
+    }
+    .featured-volume-author {
+        font-size: 0.875rem;
+        color: var(--text-light);
+        opacity: 0.75;
+        margin-bottom: 0.75rem;
+    }
     .featured-volume-price {
-        font-size: 1.15rem;
-        font-weight: 900;
+        font-size: 1.125rem;
+        font-weight: 600;
         color: var(--gold);
-        margin-bottom: 0.6rem;
+        opacity: 0.9;
     }
-    .quick-view-btn {
-        margin-top: auto;
-        background-color: var(--gold);
-        color: var(--text-dark);
-        border: none;
-        border-radius: 12px;
-        padding: 0.65rem 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        width: 100%;
-        text-align: center;
-        display: block;
-        text-decoration: none;
-    }
-    .quick-view-btn:hover {
-        background-color: var(--dark-gold);
-        color: var(--text-dark);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .featured-volume-info .flex {
+        flex-wrap: nowrap;
     }
     .featured-volume-status {
         display: inline-flex;
@@ -379,10 +438,10 @@
             padding: 0 2.5rem;
         }
         .carousel-nav-button.prev {
-            left: 0;
+            left: 0.5rem;
         }
         .carousel-nav-button.next {
-            right: 0;
+            right: 0.5rem;
         }
     }
     
@@ -411,10 +470,10 @@
             height: 40px;
         }
         .carousel-nav-button.prev {
-            left: 0;
+            left: 0.5rem;
         }
         .carousel-nav-button.next {
-            right: 0;
+            right: 0.5rem;
         }
     }
     
@@ -432,7 +491,6 @@
         gap: 2rem;
         margin-bottom: 4rem;
         width: 100%;
-        padding: 0 2rem;
     }
     .best-sellers-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -441,131 +499,18 @@
     .best-sellers-grid .product-image {
         height: 320px;
     }
-    /* Hero Section Styles */
-    .hero-section {
-        background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
-        color: white;
-        padding: 4rem 0;
-        margin-bottom: 3rem;
-    }
-    .hero-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-    .hero-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        text-align: center;
-    }
-    .hero-subtitle {
-        font-size: 1.25rem;
-        color: rgba(255, 255, 255, 0.9);
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-    .hero-search-form {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    .hero-search-wrapper {
-        position: relative;
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-        background: white;
-        border-radius: 12px;
-        padding: 0.5rem;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    }
-    .hero-search-input {
-        flex: 1;
-        border: none;
-        outline: none;
-        padding: 1rem 1.5rem;
-        font-size: 1.1rem;
-        color: var(--text-dark);
-        background: transparent;
-    }
-    .hero-search-input::placeholder {
-        color: var(--text-light);
-    }
-    .hero-category-select {
-        border-left: 2px solid var(--gold-outline);
-        padding-left: 1rem;
-        padding-right: 1rem;
-        border: none;
-        outline: none;
-        background: transparent;
-        font-size: 1rem;
-        color: var(--text-dark);
-        cursor: pointer;
-    }
-    .hero-search-button {
-        background-color: var(--red);
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    .hero-search-button:hover {
-        background-color: var(--dark-red);
-        transform: translateY(-1px);
-    }
 </style>
 
 <div class="dashboard-content">
-    <!-- Hero Section -->
-    <div class="hero-section">
-        <div class="hero-content">
-            <div class="text-center">
-                <h1 class="hero-title">Find Your Manga</h1>
-                <p class="hero-subtitle">Browse our comprehensive catalog of manga and discover your next favorite series</p>
-                
-                <!-- Search Bar -->
-                <form method="GET" action="{{ route('dashboard') }}" class="hero-search-form">
-                    <div class="hero-search-wrapper">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            value="{{ $searchQuery }}" 
-                            placeholder="Search manga, titles, authors, or series..." 
-                            class="hero-search-input"
-                        >
-                        <select name="category" class="hero-category-select">
-                            <option value="">All categories</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <button type="submit" class="hero-search-button">
-                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                            Search
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     @if($searchQuery)
-        <!-- Search Results -->
-        <div class="section-title">
-            <span>Search Results for "{{ $searchQuery }}"</span>
-        </div>
-        @if($searchResults->count() > 0)
-            <div class="products-grid">
+        <!-- Main Content Container -->
+        <div style="max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;">
+            <!-- Search Results -->
+            <div class="section-title">
+                <span>Search Results for "{{ $searchQuery }}"</span>
+            </div>
+            @if($searchResults->count() > 0)
+                <div class="products-grid">
                 @foreach($searchResults as $product)
                     <a href="{{ route('products.show', $product) }}" class="product-card">
                         @if($product->image)
@@ -577,29 +522,42 @@
                         @endif
                         <div class="product-info">
                             <h3 class="product-title">{{ $product->name }}</h3>
-                            <div class="product-price">₱{{ number_format($product->price, 2) }}</div>
-                            <div class="product-status {{ $product->stock <= 0 ? 'status-sold-out' : 'status-available' }}">
-                                <span class="status-dot {{ $product->stock <= 0 ? 'sold-out' : 'available' }}"></span>
-                                {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
+                            <p class="product-category">{{ $product->category->name }}</p>
+                            @if($product->author)
+                                <p class="product-author">By {{ $product->author }}</p>
+                            @endif
+                            <div class="flex justify-between items-center mt-4" style="gap: 0.5rem;">
+                                <span class="text-lg font-bold flex-shrink-0" style="color: var(--gold);">₱{{ number_format($product->price, 2) }}</span>
+                                <button type="button" class="add-to-cart-btn" data-product-id="{{ $product->id }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                    <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    Add to Cart
+                                </button>
                             </div>
+                            @if($product->stock <= 0)
+                                <p class="text-red-500 text-sm mt-2">Out of Stock</p>
+                            @elseif($product->stock < 10)
+                                <p class="text-orange-500 text-sm mt-2">Only {{ $product->stock }} left!</p>
+                            @endif
                         </div>
-                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
-                            Quick add
-                        </button>
                     </a>
                 @endforeach
             </div>
-        @else
-            <div class="no-products">
-                <p>No products found matching your search.</p>
-            </div>
-        @endif
+            @else
+                <div class="no-products">
+                    <p>No products found matching your search.</p>
+                </div>
+            @endif
+        </div>
     @else
-        <!-- Featured Section (Two Column: Article + Volumes) -->
-        @if($featuredSeriesProducts && $featuredSeriesProducts->count() > 0 && $featuredProduct)
-            <div class="featured-heading">Featured Manga</div>
-            <div class="featured-section">
-                <div class="featured-container">
+        <!-- Main Content Container -->
+        <div style="max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem;">
+            <!-- Featured Section (Two Column: Article + Volumes) -->
+            @if($featuredSeriesProducts && $featuredSeriesProducts->count() > 0 && $featuredProduct)
+                <div class="featured-section">
+                    <div class="featured-heading">Featured Manga</div>
+                    <div class="featured-container">
                     <!-- Left Column - Article -->
                     <div class="featured-article">
                         <h1 class="featured-series-title">{{ $featuredSeriesName }}</h1>
@@ -628,28 +586,36 @@
                         </button>
                         <div class="featured-volumes" id="featuredVolumesCarousel">
                             @foreach($featuredSeriesProducts as $product)
-                            <div class="featured-volume-card">
-                                <a href="{{ route('products.show', $product) }}" class="featured-volume-link">
-                                    @if($product->image)
-                                        <img src="{{ $product->image }}" alt="{{ $product->name }}" class="featured-volume-image">
-                                    @else
-                                        <div class="featured-volume-image-placeholder">
-                                            <span>No Image</span>
-                                        </div>
-                                    @endif
-                                    <div class="featured-volume-info">
-                                        <h3 class="featured-volume-title">{{ $product->name }}</h3>
-                                        <div class="featured-volume-price">₱{{ number_format($product->price, 2) }}</div>
-                                        <div class="featured-volume-status {{ $product->stock <= 0 ? 'status-sold-out' : 'status-available' }}">
-                                            <span class="status-dot {{ $product->stock <= 0 ? 'sold-out' : 'available' }}"></span>
-                                            {{ $product->stock <= 0 ? 'Sold out' : ($product->stock < 5 ? 'Special Order' : 'On hand') }}
-                                        </div>
+                            <a href="{{ route('products.show', $product) }}" class="featured-volume-card">
+                                @if($product->image)
+                                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="featured-volume-image">
+                                @else
+                                    <div class="featured-volume-image-placeholder">
+                                        <span>No Image</span>
                                     </div>
-                                </a>
-                                <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
-                                    Quick add
-                                </button>
-                            </div>
+                                @endif
+                                <div class="featured-volume-info">
+                                    <h3 class="featured-volume-title">{{ $product->name }}</h3>
+                                    <p class="featured-volume-category">{{ $product->category->name }}</p>
+                                    @if($product->author)
+                                        <p class="featured-volume-author">By {{ $product->author }}</p>
+                                    @endif
+                                    <div class="flex justify-between items-center mt-4" style="gap: 0.5rem;">
+                                        <span class="text-lg font-bold flex-shrink-0" style="color: var(--gold);">₱{{ number_format($product->price, 2) }}</span>
+                                        <button type="button" class="add-to-cart-btn" data-product-id="{{ $product->id }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                            <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                            </svg>
+                                            Add to Cart
+                                        </button>
+                                    </div>
+                                    @if($product->stock <= 0)
+                                        <p class="text-red-500 text-sm mt-2">Out of Stock</p>
+                                    @elseif($product->stock < 10)
+                                        <p class="text-orange-500 text-sm mt-2">Only {{ $product->stock }} left!</p>
+                                    @endif
+                                </div>
+                            </a>
                             @endforeach
                         </div>
                         <button type="button" class="carousel-nav-button next" data-direction="next" aria-label="Next volumes">
@@ -658,17 +624,17 @@
                             </svg>
                         </button>
                     </div>
+                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
 
-        <!-- Best Sellers -->
-        <div class="section-title">
-            <span>Best Sellers</span>
-            <a href="{{ route('home') }}" class="view-all-link">View all</a>
-        </div>
-        @if($bestSellers->count() > 0)
-            <div class="products-grid best-sellers-grid">
+            <!-- Best Sellers -->
+            <div class="section-title">
+                <span>Best Sellers</span>
+                <a href="{{ route('home') }}" class="view-all-link">View all</a>
+            </div>
+            @if($bestSellers->count() > 0)
+                <div class="products-grid best-sellers-grid">
                 @foreach($bestSellers as $product)
                     <a href="{{ route('products.show', $product) }}" class="product-card">
                         @if($product->image)
@@ -680,70 +646,44 @@
                         @endif
                         <div class="product-info">
                             <h3 class="product-title">{{ $product->name }}</h3>
-                            <div class="product-price">₱{{ number_format($product->price, 2) }}</div>
-                            <div class="product-status {{ $product->stock <= 0 ? 'status-sold-out' : 'status-available' }}">
-                                <span class="status-dot {{ $product->stock <= 0 ? 'sold-out' : 'available' }}"></span>
-                                {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
+                            <p class="product-category">{{ $product->category->name }}</p>
+                            @if($product->author)
+                                <p class="product-author">By {{ $product->author }}</p>
+                            @endif
+                            <div class="flex justify-between items-center mt-4" style="gap: 0.5rem;">
+                                <span class="text-lg font-bold flex-shrink-0" style="color: var(--gold);">₱{{ number_format($product->price, 2) }}</span>
+                                <button type="button" class="add-to-cart-btn" data-product-id="{{ $product->id }}" {{ $product->stock <= 0 ? 'disabled' : '' }}>
+                                    <svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    Add to Cart
+                                </button>
                             </div>
+                            @if($product->stock <= 0)
+                                <p class="text-red-500 text-sm mt-2">Out of Stock</p>
+                            @elseif($product->stock < 10)
+                                <p class="text-orange-500 text-sm mt-2">Only {{ $product->stock }} left!</p>
+                            @endif
                         </div>
-                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
-                            Quick add
-                        </button>
                     </a>
                 @endforeach
             </div>
-        @else
-            <div class="no-products">
-                <p>No new releases this month.</p>
-            </div>
-        @endif
-
-        <!-- Newly Added Mangas -->
-        <div class="section-title">
-            <span>Newly Added Mangas</span>
-            <a href="{{ route('home') }}" class="view-all-link">View all</a>
+            @else
+                <div class="no-products">
+                    <p>No new releases this month.</p>
+                </div>
+            @endif
         </div>
-        @if($newlyAdded->count() > 0)
-            <div class="products-grid">
-                @foreach($newlyAdded as $product)
-                    <a href="{{ route('products.show', $product) }}" class="product-card">
-                        @if($product->image)
-                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="product-image">
-                        @else
-                            <div class="product-image-placeholder">
-                                <span>No Image</span>
-                            </div>
-                        @endif
-                        <div class="product-info">
-                            <h3 class="product-title">{{ $product->name }}</h3>
-                            <div class="product-price">₱{{ number_format($product->price, 2) }}</div>
-                            <div class="product-status {{ $product->stock <= 0 ? 'status-sold-out' : 'status-available' }}">
-                                <span class="status-dot {{ $product->stock <= 0 ? 'sold-out' : 'available' }}"></span>
-                                {{ $product->stock <= 0 ? 'Sold out' : 'On hand' }}
-                            </div>
-                        <button type="button" class="quick-view-btn" data-product-id="{{ $product->id }}" data-product-url="{{ route('products.show', $product) }}" onclick="event.stopPropagation();">
-                            Quick add
-                        </button>
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        @else
-            <div class="no-products">
-                <p>No newly added mangas available.</p>
-            </div>
-        @endif
     @endif
-</div>
 </div>
 @endsection
 
 @push('scripts')
 <script>
-    // Quick Add to Cart Functionality
+    // Add to Cart Functionality
     document.addEventListener('DOMContentLoaded', () => {
-        // Add click handlers to all Quick add buttons
-        document.querySelectorAll('.quick-view-btn').forEach(btn => {
+        // Add click handlers to all Add to Cart buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -754,8 +694,8 @@
                 
                 // Disable button during request
                 btn.disabled = true;
-                const originalText = btn.textContent;
-                btn.textContent = 'Adding...';
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = '<svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg> Adding...';
                 
                 try {
                     const response = await fetch(`/cart/add/${productId}`, {
@@ -779,20 +719,21 @@
                         showNotification('Product added to cart!', 'success');
                         
                         // Reset button
-                        btn.textContent = 'Added!';
+                        const originalHTML = btn.innerHTML;
+                        btn.innerHTML = '<svg class="cart-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Added!';
                         setTimeout(() => {
-                            btn.textContent = originalText;
+                            btn.innerHTML = originalHTML;
                             btn.disabled = false;
-                        }, 1000);
+                        }, 1500);
                     } else {
                         showNotification(data.message || 'Failed to add to cart', 'error');
-                        btn.textContent = originalText;
+                        btn.innerHTML = originalHTML;
                         btn.disabled = false;
                     }
                 } catch (error) {
                     console.error('Error adding to cart:', error);
                     showNotification('An error occurred. Please try again.', 'error');
-                    btn.textContent = originalText;
+                    btn.innerHTML = originalHTML;
                     btn.disabled = false;
                 }
             });

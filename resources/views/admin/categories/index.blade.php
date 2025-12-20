@@ -4,46 +4,89 @@
 @section('page-title', 'Categories')
 
 @section('content')
-<div class="mb-4">
-    <a href="{{ route('admin.categories.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
-        Add New Category
+<style>
+    .categories-table {
+        background-color: var(--light-beige);
+        border: 2px solid var(--gold-outline);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .table-header-bg {
+        background-color: var(--warm-beige);
+        border-bottom: 2px solid var(--gold-outline);
+    }
+    .btn-primary {
+        background-color: var(--gold);
+        color: var(--text-dark);
+        border: 2px solid var(--gold-outline);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .btn-primary:hover {
+        background-color: var(--dark-gold);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+</style>
+
+<div class="mb-6">
+    <a href="{{ route('admin.categories.create') }}" class="btn-primary inline-block">
+        + Add New Category
     </a>
 </div>
 
-<div class="bg-white rounded-lg shadow overflow-hidden">
-    <table class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-            </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-            @foreach($categories as $category)
+<div class="categories-table">
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y" style="border-color: var(--gold-outline);">
+            <thead class="table-header-bg">
                 <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">{{ $category->name }}</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {{ $category->slug }}
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500">
-                        {{ \Illuminate\Support\Str::limit($category->description ?? 'N/A', 50) }}
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <a href="{{ route('admin.categories.edit', $category) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                        <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" class="inline" onsubmit="return confirm('Are you sure?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900">Delete</button>
-                        </form>
-                    </td>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-dark); border-bottom: 2px solid var(--gold-outline);">Name</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-dark); border-bottom: 2px solid var(--gold-outline);">Slug</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-dark); border-bottom: 2px solid var(--gold-outline);">Description</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-dark); border-bottom: 2px solid var(--gold-outline);">Products</th>
+                    <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider" style="color: var(--text-dark); border-bottom: 2px solid var(--gold-outline);">Actions</th>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="divide-y" style="background-color: var(--light-beige); border-color: var(--gold-outline);">
+                @forelse($categories as $category)
+                    <tr class="hover:bg-opacity-50" style="background-color: rgba(255, 255, 255, 0.3);">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-semibold" style="color: var(--text-dark);">{{ $category->name }}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-light);">
+                            {{ $category->slug }}
+                        </td>
+                        <td class="px-6 py-4 text-sm" style="color: var(--text-light);">
+                            {{ \Illuminate\Support\Str::limit($category->description ?? 'No description', 50) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full border-2" style="border-color: var(--gold); background-color: rgba(212, 175, 55, 0.1); color: var(--gold);">
+                                {{ $category->products()->count() }} products
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                            <a href="{{ route('admin.categories.show', $category) }}" class="px-3 py-1 rounded transition-colors" style="color: var(--gold); background-color: rgba(212, 175, 55, 0.1);" onmouseover="this.style.backgroundColor='rgba(212, 175, 55, 0.2)'" onmouseout="this.style.backgroundColor='rgba(212, 175, 55, 0.1)'">View</a>
+                            <a href="{{ route('admin.categories.edit', $category) }}" class="px-3 py-1 rounded transition-colors" style="color: var(--gold); background-color: rgba(212, 175, 55, 0.1);" onmouseover="this.style.backgroundColor='rgba(212, 175, 55, 0.2)'" onmouseout="this.style.backgroundColor='rgba(212, 175, 55, 0.1)'">Edit</a>
+                            <form method="POST" action="{{ route('admin.categories.destroy', $category) }}" class="inline" onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1 rounded transition-colors" style="color: var(--red); background-color: rgba(239, 27, 49, 0.1);" onmouseover="this.style.backgroundColor='rgba(239, 27, 49, 0.2)'" onmouseout="this.style.backgroundColor='rgba(239, 27, 49, 0.1)'">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center" style="color: var(--text-light);">
+                            No categories found. <a href="{{ route('admin.categories.create') }}" style="color: var(--gold);">Create one</a>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <div class="mt-6">

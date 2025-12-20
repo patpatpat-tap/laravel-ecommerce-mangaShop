@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -38,12 +39,20 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'author' => ['nullable', 'string', 'max:255'],
             'publisher' => ['nullable', 'string', 'max:255'],
             'pages' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['boolean'],
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . Str::slug($validated['name']) . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('images/products', $imageName, 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        }
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');
@@ -83,12 +92,28 @@ class ProductController extends Controller
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
-            'image' => ['nullable', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
             'author' => ['nullable', 'string', 'max:255'],
             'publisher' => ['nullable', 'string', 'max:255'],
             'pages' => ['nullable', 'integer', 'min:1'],
             'is_active' => ['boolean'],
         ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($product->image && Storage::disk('public')->exists(str_replace('/storage/', '', $product->image))) {
+                Storage::disk('public')->delete(str_replace('/storage/', '', $product->image));
+            }
+
+            $image = $request->file('image');
+            $imageName = time() . '_' . Str::slug($validated['name']) . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('images/products', $imageName, 'public');
+            $validated['image'] = '/storage/' . $imagePath;
+        } else {
+            // Keep existing image if no new image is uploaded
+            unset($validated['image']);
+        }
 
         $validated['slug'] = Str::slug($validated['name']);
         $validated['is_active'] = $request->has('is_active');

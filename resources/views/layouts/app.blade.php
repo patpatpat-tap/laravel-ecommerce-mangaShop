@@ -56,6 +56,7 @@
             padding: 4rem 0 2rem;
         }
         /* Modal Styles */
+        /* Modern Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -65,107 +66,175 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
         .modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .modal-content {
-            background-color: var(--light-beige);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(250, 249, 246, 0.98) 100%);
             margin: auto;
-            padding: 2.5rem;
-            border: 2px solid var(--gold-outline);
-            border-radius: 16px;
+            padding: 0;
+            border: none;
+            border-radius: 24px;
             width: 90%;
-            max-width: 450px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            animation: modalSlideIn 0.3s ease-out;
+            max-width: 480px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(212, 175, 55, 0.1);
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            position: relative;
+        }
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--gold) 0%, var(--dark-gold) 50%, var(--gold) 100%);
         }
         @keyframes modalSlideIn {
             from {
-                transform: translateY(-50px);
+                transform: translateY(-30px) scale(0.95);
                 opacity: 0;
             }
             to {
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
                 opacity: 1;
             }
         }
         .modal-header {
+            padding: 2.5rem 2.5rem 1.5rem;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, transparent 100%);
+        }
+        .modal-title {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            letter-spacing: -0.02em;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.05);
+            border: none;
+            color: var(--text-dark);
+            font-size: 1.5rem;
+            font-weight: 300;
+            cursor: pointer;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            line-height: 1;
+        }
+        .close-modal:hover {
+            background: rgba(239, 27, 49, 0.1);
+            color: var(--red);
+            transform: rotate(90deg);
+        }
+        .modal-body {
+            padding: 0 2.5rem 2.5rem;
+        }
+        .form-group {
             margin-bottom: 1.5rem;
             position: relative;
         }
-        .modal-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-            color: var(--gold);
-            margin: 0;
-        }
-        .close-modal {
-            color: var(--text-dark);
-            font-size: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            line-height: 1;
-            transition: color 0.2s;
-            position: absolute;
-            right: 0;
-        }
-        .close-modal:hover {
-            color: var(--red);
-        }
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
         .form-label {
             display: block;
+            font-family: 'Poppins', 'Inter', sans-serif;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             color: var(--text-dark);
             font-size: 0.95rem;
+            letter-spacing: 0.01em;
+        }
+        .form-input-wrapper {
+            position: relative;
+        }
+        .form-input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-light);
+            pointer-events: none;
+            transition: color 0.2s;
         }
         .form-input {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--gold-outline);
-            border-radius: 8px;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
             font-size: 1rem;
+            font-family: 'Poppins', 'Inter', sans-serif;
             background-color: white;
             color: var(--text-dark);
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
         .form-input:focus {
             outline: none;
             border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+            box-shadow: 
+                0 0 0 4px rgba(212, 175, 55, 0.1),
+                0 4px 12px rgba(212, 175, 55, 0.15);
+            transform: translateY(-1px);
+        }
+        .form-input:focus + .form-input-icon,
+        .form-input:not(:placeholder-shown) + .form-input-icon {
+            color: var(--gold);
         }
         .form-input.error {
             border-color: var(--red);
+            box-shadow: 0 0 0 4px rgba(239, 27, 49, 0.1);
+        }
+        .form-input.error:focus {
+            box-shadow: 
+                0 0 0 4px rgba(239, 27, 49, 0.1),
+                0 4px 12px rgba(239, 27, 49, 0.15);
         }
         .error-message {
             color: var(--red);
             font-size: 0.875rem;
-            margin-top: 0.25rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
         }
         .form-checkbox {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1.25rem;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
         }
         .form-checkbox input {
             width: 1.25rem;
             height: 1.25rem;
             cursor: pointer;
+            accent-color: var(--gold);
         }
         .form-checkbox label {
             font-size: 0.9rem;
@@ -174,48 +243,85 @@
         }
         .btn-modal {
             width: 100%;
-            padding: 0.875rem 1.5rem;
-            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 1rem;
-            border: 2px solid;
+            font-family: 'Poppins', 'Inter', sans-serif;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-modal::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        .btn-modal:hover::before {
+            width: 300px;
+            height: 300px;
         }
         .btn-modal-primary {
-            background-color: var(--gold);
+            background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%);
             color: var(--text-dark);
-            border-color: var(--gold-outline);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
         }
         .btn-modal-primary:hover {
-            background-color: var(--dark-gold);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+        }
+        .btn-modal-primary:active {
+            transform: translateY(0);
         }
         .btn-modal-secondary {
             background-color: #000000;
             color: var(--red);
-            border-color: var(--red);
+            border: 2px solid var(--red);
         }
         .btn-modal-secondary:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
         .modal-footer {
-            margin-top: 1.5rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
         }
         .modal-footer a {
             color: var(--gold);
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .modal-footer a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s;
         }
         .modal-footer a:hover {
             color: var(--dark-gold);
-            text-decoration: underline;
+        }
+        .modal-footer a:hover::after {
+            width: 100%;
         }
         .modal-link {
             cursor: pointer;
@@ -378,7 +484,7 @@
             overflow: hidden;
         }
         .user-dropdown.show {
-            display: block;
+            display: block !important;
         }
         .user-dropdown-item {
             display: block;
@@ -470,24 +576,81 @@
     </style>
 </head>
 <body>
-    @if(request()->routeIs('dashboard') || request()->routeIs('cart.index') || request()->routeIs('orders.index'))
-        <nav class="dashboard-header">
+    @if(request()->routeIs('landing'))
+        <!-- Landing Page Nav Bar with Sign In/Sign Up -->
+        <nav class="dashboard-header" style="background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%) !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 2rem 0;">
             <div class="search-container">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 2rem; width: 100%;">
                     <!-- Logo on the left -->
-                    <a href="{{ route('dashboard') }}" class="logo-section">
-                        <div class="logo-icon">
-                            <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <a href="{{ route('dashboard') }}" class="logo-section" style="color: white !important; text-decoration: none !important; display: flex !important; align-items: center !important; gap: 1rem !important; cursor: pointer;">
+                        <div class="logo-icon" style="width: 3.5rem !important; height: 3.5rem !important; background-color: rgba(255, 255, 255, 0.2) !important; border-radius: 16px !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all 0.2s; flex-shrink: 0;">
+                            <svg style="width: 2rem !important; height: 2rem !important; color: white !important; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                         </div>
-                        <span class="logo-text">Manga Shop</span>
+                        <span class="logo-text" style="color: white !important; font-size: 1.75rem !important; font-weight: 800 !important; white-space: nowrap;">Manga Shop</span>
                     </a>
 
-                    <!-- Right Side: Cart, Orders, and User -->
-                    <div class="header-right">
+                    <!-- Right Side: Sign In and Sign Up -->
+                    <div class="header-right" style="display: flex; align-items: center; gap: 1rem;">
+                        @guest
+                            <button type="button" onclick="openModal('loginModal')" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none; border: none; font-weight: 600; font-size: 0.95rem;">
+                                Sign In
+                            </button>
+                            <button type="button" onclick="openModal('registerModal')" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none; border: none; font-weight: 600; font-size: 0.95rem;">
+                                Sign Up
+                            </button>
+                        @else
+                            <a href="{{ route('dashboard') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none;">
+                                Go to Dashboard
+                            </a>
+                        @endguest
+                    </div>
+                </div>
+            </div>
+        </nav>
+    @elseif(request()->routeIs('products.show') || request()->routeIs('cart.index') || request()->routeIs('checkout') || request()->routeIs('orders.index') || request()->routeIs('orders.show') || request()->routeIs('home') || request()->routeIs('dashboard'))
+        @php
+            $dropdownId = 'userDropdown';
+            if (request()->routeIs('home')) {
+                $dropdownId = 'userDropdownShop';
+            } elseif (request()->routeIs('dashboard')) {
+                $dropdownId = 'userDropdownDashboard';
+            } elseif (request()->routeIs('cart.index')) {
+                $dropdownId = 'userDropdownCart';
+            } elseif (request()->routeIs('checkout')) {
+                $dropdownId = 'userDropdownCheckout';
+            } elseif (request()->routeIs('orders.index') || request()->routeIs('orders.show')) {
+                $dropdownId = 'userDropdownOrders';
+            } elseif (request()->routeIs('products.show')) {
+                $dropdownId = 'userDropdownProduct';
+            }
+        @endphp
+        <nav class="dashboard-header" style="background: linear-gradient(135deg, var(--gold) 0%, var(--dark-gold) 100%) !important; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 2rem 0;">
+            <div class="search-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 2rem; width: 100%;">
+                    <!-- Logo on the left -->
+                    <a href="{{ route('dashboard') }}" class="logo-section" style="color: white !important; text-decoration: none !important; display: flex !important; align-items: center !important; gap: 1rem !important; cursor: pointer;">
+                        <div class="logo-icon" style="width: 3.5rem !important; height: 3.5rem !important; background-color: rgba(255, 255, 255, 0.2) !important; border-radius: 16px !important; display: flex !important; align-items: center !important; justify-content: center !important; transition: all 0.2s; flex-shrink: 0;">
+                            <svg style="width: 2rem !important; height: 2rem !important; color: white !important; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </div>
+                        <span class="logo-text" style="color: white !important; font-size: 1.75rem !important; font-weight: 800 !important; white-space: nowrap;">Manga Shop</span>
+                    </a>
+
+                    <!-- Right Side: Shop, Cart, Orders, and User -->
+                    <div class="header-right" style="display: flex; align-items: center; gap: 1.5rem;">
+                        <!-- Shop Button -->
+                        <a href="{{ route('home') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none;">
+                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                            <span>Shop</span>
+                        </a>
+
                         <!-- Cart Icon -->
-                        <a href="{{ route('cart.index') }}" class="cart-icon-wrapper">
+                        <a href="{{ route('cart.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none;">
                             <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
@@ -499,9 +662,9 @@
                             @endauth
                         </a>
 
-                        <!-- Orders Button (styled like cart) -->
+                        <!-- Orders Button -->
                         @auth
-                            <a href="{{ route('orders.index') }}" class="cart-icon-wrapper">
+                            <a href="{{ route('orders.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: white !important; display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255, 255, 255, 0.2); border-radius: 8px; transition: all 0.2s; text-decoration: none;">
                                 <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
                                 </svg>
@@ -511,95 +674,38 @@
 
                         <!-- User Pill -->
                         @auth
-                            <div class="user-pill" onclick="toggleUserDropdown(event)">
-                                <div class="user-avatar">
+                            <div class="user-pill" onclick="toggleUserDropdown(event)" style="position: relative; display: flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.2); padding: 0.5rem 1rem; border-radius: 25px; color: white !important; cursor: pointer; transition: all 0.2s;">
+                                <div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center;">
                                     <svg style="width: 22px; height: 22px; color: var(--gold);" fill="currentColor" viewBox="0 0 24 24">
                                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z"/>
                                     </svg>
                                 </div>
-                                <div style="font-weight: 600; color: var(--text-dark);">
+                                <div style="font-weight: 600; color: white !important;">
                                     {{ auth()->user()->name }}
                                 </div>
-                                <svg style="width: 16px; height: 16px; color: var(--text-dark);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg style="width: 16px; height: 16px; color: white !important;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                                 </svg>
-                                <div class="user-dropdown" id="userDropdown">
-                                    <form method="POST" action="{{ route('logout') }}">
+                                <div class="user-dropdown" id="{{ $dropdownId }}" style="position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); min-width: 180px; z-index: 10000 !important; display: none; overflow: visible;">
+                                    <form method="POST" action="{{ route('logout') }}" style="margin: 0; padding: 0;" onclick="event.stopPropagation();">
                                         @csrf
-                                        <button type="submit" class="user-dropdown-item logout" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">
+                                        <button type="submit" class="user-dropdown-item logout" style="display: block !important; padding: 0.75rem 1rem !important; color: var(--red) !important; text-decoration: none !important; transition: all 0.2s !important; border: none !important; background: none !important; cursor: pointer !important; font-size: 0.95rem !important; width: 100% !important; text-align: left !important; pointer-events: auto !important;">
                                             <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
                                         </button>
                                     </form>
                                 </div>
+                                <style>
+                                    #{{ $dropdownId }}.show {
+                                        display: block !important;
+                                    }
+                                </style>
                             </div>
                         @endauth
                     </div>
                 </div>
             </div>
         </nav>
-    @elseif(!request()->routeIs('products.show') && !request()->routeIs('cart.index') && !request()->routeIs('orders.index') && !request()->routeIs('checkout'))
-    <nav style="background-color: var(--light-beige); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-bottom: 2px solid var(--gold-outline); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; width: 100%;">
-        <div class="nav-container" style="height: 6rem; display: flex; justify-content: space-between; align-items: center; padding: 0 2rem; max-width: 1400px; margin: 0 auto; width: 100%;">
-            <div class="flex-shrink-0 flex items-center">
-                <a href="{{ route('landing') }}" class="logo-section" style="color: var(--text-dark); text-decoration: none; display: flex; align-items: center; gap: 1rem;">
-                    <div class="logo-icon" style="background-color: var(--gold); width: 3.5rem; height: 3.5rem; border-radius: 16px; display: flex; align-items: center; justify-content: center;">
-                        <svg style="width: 2rem; height: 2rem; color: white;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                        </svg>
-                    </div>
-                    <span class="logo-text" style="color: var(--text-dark); font-size: 1.75rem; font-weight: 800;">Manga Shop</span>
-                </a>
-            </div>
-            <div style="display: flex !important; align-items: center; gap: 1rem; flex-shrink: 0; visibility: visible !important;">
-                @guest
-                    <button type="button" onclick="openModal('loginModal')" class="btn-hero" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); background-color: var(--gold); color: var(--text-dark); border: 2px solid var(--gold-outline); cursor: pointer; border: none;">Sign In</button>
-                    <button type="button" onclick="openModal('registerModal')" class="btn-hero-secondary" style="display: inline-flex !important; visibility: visible !important; opacity: 1 !important; margin: 0 !important; padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); background-color: #000000; color: var(--red); border: 2px solid var(--red); cursor: pointer; border: none;">Sign Up</button>
-                @else
-                    @auth
-                        <a href="{{ route('cart.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border-radius: 8px; transition: all 0.2s; text-decoration: none;">
-                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                            <span>Cart</span>
-                            @if(auth()->user()->cart && auth()->user()->cart->items->count() > 0)
-                                <span class="cart-badge" style="position: absolute; top: -8px; right: -8px; background-color: var(--red); color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
-                                    {{ auth()->user()->cart->items->sum('quantity') }}
-                                </span>
-                            @endif
-                        </a>
-                        <a href="{{ route('orders.index') }}" class="cart-icon-wrapper" style="position: relative; cursor: pointer; color: var(--text-dark); display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: transparent; border-radius: 8px; transition: all 0.2s; text-decoration: none;">
-                            <svg style="width: 24px; height: 24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z"/>
-                            </svg>
-                            <span>Orders</span>
-                        </a>
-                        <div class="user-pill" onclick="toggleUserDropdown(event)" style="position: relative; display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; background: transparent; border-radius: 25px; color: var(--text-dark); cursor: pointer; transition: all 0.2s;">
-                            <div class="user-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center;">
-                                <svg style="width: 22px; height: 22px; color: var(--gold);" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-3.33 0-6 2.24-6 5v1h12v-1c0-2.76-2.67-5-6-5z"/>
-                                </svg>
-                            </div>
-                            <div style="font-weight: 600; color: var(--text-dark);">
-                                {{ auth()->user()->name }}
-                            </div>
-                            <svg style="width: 16px; height: 16px; color: var(--text-dark);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                            </svg>
-                            <div class="user-dropdown" id="userDropdown" style="position: absolute; top: 100%; right: 0; margin-top: 0.5rem; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); min-width: 180px; z-index: 1000; display: none; overflow: hidden;">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="user-dropdown-item logout" style="display: block; padding: 0.75rem 1rem; color: var(--red); text-decoration: none; transition: all 0.2s; border-bottom: 1px solid rgba(0, 0, 0, 0.05); width: 100%; text-align: left; border: none; background: none; cursor: pointer; font-size: 0.95rem;">
-                                        <i class="fas fa-sign-out-alt" style="margin-right: 0.5rem;"></i>Logout
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    @endauth
-                @endguest
-            </div>
-        </div>
-    </nav>
-    @endunless
+    @endif
 
     @if(session('success'))
         <div class="px-4 py-3 rounded relative max-w-7xl mx-auto mt-4" role="alert" style="background-color: rgba(212, 175, 55, 0.1); border: 2px solid var(--gold); color: var(--gold);">
@@ -613,7 +719,7 @@
         </div>
     @endif
 
-    <main style="padding-top: {{ request()->routeIs('dashboard') || request()->routeIs('cart.index') || request()->routeIs('orders.index') ? '8rem' : '6rem' }};">
+    <main style="padding-top: {{ request()->routeIs('dashboard') || request()->routeIs('cart.index') || request()->routeIs('orders.index') || request()->routeIs('checkout') || request()->routeIs('products.show') ? '8rem' : (request()->routeIs('landing') ? '0' : '6rem') }};">
         @yield('content')
     </main>
 
@@ -622,24 +728,38 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h2 class="modal-title">Sign In</h2>
-                <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+                <button class="close-modal" onclick="closeModal('loginModal')" aria-label="Close">&times;</button>
             </div>
-            <form id="loginForm" method="POST" action="{{ route('login') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="login_email" class="form-label">Email</label>
-                    <input type="email" name="email" id="login_email" class="form-input" autocomplete="email" required>
-                    <div id="login_email_error" class="error-message"></div>
+            <div class="modal-body">
+                <form id="loginForm" method="POST" action="{{ route('login') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="login_email" class="form-label">Email</label>
+                        <div class="form-input-wrapper">
+                            <input type="email" name="email" id="login_email" class="form-input" autocomplete="email" placeholder="Enter your email" required>
+                            <svg class="form-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div id="login_email_error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="login_password" class="form-label">Password</label>
+                        <div class="form-input-wrapper">
+                            <input type="password" name="password" id="login_password" class="form-input" autocomplete="current-password" placeholder="Enter your password" required>
+                            <svg class="form-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <div id="login_password_error" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn-modal btn-modal-primary">
+                        <span style="position: relative; z-index: 1;">Sign In</span>
+                    </button>
+                </form>
+                <div class="modal-footer">
+                    Don't have an account? <a onclick="closeModal('loginModal'); openModal('registerModal');" class="modal-link">Sign up here</a>
                 </div>
-                <div class="form-group">
-                    <label for="login_password" class="form-label">Password</label>
-                    <input type="password" name="password" id="login_password" class="form-input" autocomplete="current-password" required>
-                    <div id="login_password_error" class="error-message"></div>
-                </div>
-                <button type="submit" class="btn-modal btn-modal-primary">Sign In</button>
-            </form>
-            <div class="modal-footer">
-                Don't have an account? <a onclick="closeModal('loginModal'); openModal('registerModal');" class="modal-link">Sign up here</a>
             </div>
         </div>
     </div>
@@ -649,29 +769,48 @@
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
                 <h2 class="modal-title">Sign Up</h2>
-                <button class="close-modal" onclick="closeModal('registerModal')">&times;</button>
+                <button class="close-modal" onclick="closeModal('registerModal')" aria-label="Close">&times;</button>
             </div>
-            <form id="registerForm" method="POST" action="{{ route('register') }}">
-                @csrf
-                <div class="form-group">
-                    <label for="register_name" class="form-label">Full Name</label>
-                    <input type="text" name="name" id="register_name" class="form-input" autocomplete="name" required>
-                    <div id="register_name_error" class="error-message"></div>
+            <div class="modal-body">
+                <form id="registerForm" method="POST" action="{{ route('register') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="register_name" class="form-label">Full Name</label>
+                        <div class="form-input-wrapper">
+                            <input type="text" name="name" id="register_name" class="form-input" autocomplete="name" placeholder="Enter your full name" required>
+                            <svg class="form-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <div id="register_name_error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_email" class="form-label">Email</label>
+                        <div class="form-input-wrapper">
+                            <input type="email" name="email" id="register_email" class="form-input" autocomplete="email" placeholder="Enter your email" required>
+                            <svg class="form-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <div id="register_email_error" class="error-message"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="register_password" class="form-label">Password</label>
+                        <div class="form-input-wrapper">
+                            <input type="password" name="password" id="register_password" class="form-input" autocomplete="new-password" placeholder="Create a password" required>
+                            <svg class="form-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <div id="register_password_error" class="error-message"></div>
+                    </div>
+                    <button type="submit" class="btn-modal btn-modal-primary">
+                        <span style="position: relative; z-index: 1;">Sign Up</span>
+                    </button>
+                </form>
+                <div class="modal-footer">
+                    Already have an account? <a onclick="closeModal('registerModal'); openModal('loginModal');" class="modal-link">Sign in here</a>
                 </div>
-                <div class="form-group">
-                    <label for="register_email" class="form-label">Email</label>
-                    <input type="email" name="email" id="register_email" class="form-input" autocomplete="email" required>
-                    <div id="register_email_error" class="error-message"></div>
-                </div>
-                <div class="form-group">
-                    <label for="register_password" class="form-label">Password</label>
-                    <input type="password" name="password" id="register_password" class="form-input" autocomplete="new-password" required>
-                    <div id="register_password_error" class="error-message"></div>
-                </div>
-                <button type="submit" class="btn-modal btn-modal-primary">Sign Up</button>
-            </form>
-            <div class="modal-footer">
-                Already have an account? <a onclick="closeModal('registerModal'); openModal('loginModal');" class="modal-link">Sign in here</a>
             </div>
         </div>
     </div>
@@ -855,22 +994,44 @@
         // User Dropdown Toggle
         function toggleUserDropdown(event) {
             event.stopPropagation();
-            const dropdown = document.getElementById('userDropdown');
-            const isOpen = dropdown.classList.contains('show');
+            const userPill = event.target.closest('.user-pill');
+            if (!userPill) {
+                console.error('User pill not found');
+                return;
+            }
+            
+            const dropdown = userPill.querySelector('.user-dropdown');
+            if (!dropdown) {
+                console.error('Dropdown not found in user pill');
+                return;
+            }
+            
+            const isOpen = dropdown.classList.contains('show') || dropdown.style.display === 'block';
             
             // Close all dropdowns first
-            document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('show'));
+            document.querySelectorAll('.user-dropdown').forEach(d => {
+                d.classList.remove('show');
+                d.style.display = 'none';
+            });
             
             // Toggle this dropdown
             if (!isOpen) {
                 dropdown.classList.add('show');
+                dropdown.style.display = 'block';
+            } else {
+                dropdown.classList.remove('show');
+                dropdown.style.display = 'none';
             }
         }
         
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.user-pill')) {
-                document.querySelectorAll('.user-dropdown').forEach(d => d.classList.remove('show'));
+            // Don't close if clicking inside the dropdown or the user pill
+            if (!event.target.closest('.user-pill') && !event.target.closest('.user-dropdown')) {
+                document.querySelectorAll('.user-dropdown').forEach(d => {
+                    d.classList.remove('show');
+                    d.style.display = 'none';
+                });
             }
         });
     </script>

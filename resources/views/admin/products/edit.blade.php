@@ -4,8 +4,51 @@
 @section('page-title', 'Edit Product')
 
 @section('content')
-<div class="bg-white rounded-lg shadow p-6">
-    <form method="POST" action="{{ route('admin.products.update', $product) }}">
+<style>
+    .form-container {
+        background-color: var(--light-beige);
+        border: 2px solid var(--gold-outline);
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .form-input {
+        border: 2px solid var(--gold-outline);
+        border-radius: 8px;
+    }
+    .form-input:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+    }
+    .btn-submit {
+        background-color: var(--gold);
+        color: var(--text-dark);
+        border: 2px solid var(--gold-outline);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .btn-submit:hover {
+        background-color: var(--dark-gold);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .btn-cancel {
+        background-color: var(--text-light);
+        color: white;
+        border: 2px solid var(--text-light);
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .btn-cancel:hover {
+        background-color: var(--text-dark);
+    }
+</style>
+<div class="form-container">
+    <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -83,9 +126,19 @@
         </div>
 
         <div class="mb-6">
-            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
-            <input type="text" name="image" id="image" value="{{ old('image', $product->image) }}"
-                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+            @if($product->image)
+                <div class="mb-3">
+                    <p class="text-sm text-gray-600 mb-2">Current Image:</p>
+                    <img src="{{ $product->image }}" alt="{{ $product->name }}" class="w-32 h-48 object-cover rounded border border-gray-300">
+                </div>
+            @endif
+            <input type="file" name="image" id="image" accept="image/jpeg,image/jpg,image/png,image/webp"
+                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('image') border-red-500 @enderror">
+            <p class="text-xs text-gray-500 mt-1">Accepted formats: JPG, PNG, WEBP. Max size: 5MB. Leave empty to keep current image.</p>
+            @error('image')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         <div class="mb-6">
@@ -96,10 +149,10 @@
         </div>
 
         <div class="flex space-x-4">
-            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+            <button type="submit" class="btn-submit">
                 Update Product
             </button>
-            <a href="{{ route('admin.products.index') }}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">
+            <a href="{{ route('admin.products.index') }}" class="btn-cancel">
                 Cancel
             </a>
         </div>

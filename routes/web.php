@@ -63,4 +63,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
     // Order status update
     Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+    
+    // Order item QA status update
+    Route::put('/order-items/{orderItem}/qa-status', [OrderController::class, 'updateQAStatus'])->name('order-items.update-qa-status');
 });
